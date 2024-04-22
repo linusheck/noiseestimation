@@ -1,0 +1,20 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+torch = "2.2.2"
+fire = "0.6.0"
+matplotlib = "3.8.4"
+numpy = "1.26.4"
+tqdm = "4.66.2"
+black = "24.4.0"
+tikzplotlib = "0.10.1"
+torchsde = {editable = true, ref = "master", git = "https://github.com/glatteis/torchsde"}
+pandas = "2.2.2"
+kramersmoyal = "0.4.1"
+
+[dev-packages]
+
+[requires]
