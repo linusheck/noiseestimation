@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 fixed_args="multistablesde/latent_sde.py --model ornstein --dt=0.01 --t1=5.0 --lr_gamma=0.999 --kl-anneal-iters=200 --latent-size=1 --num-iters 5000 --beta 10"
 
 variable_args=(

@@ -17,10 +17,13 @@ For all experiments, the scripts to execute them (see below how), as well as the
 - Noise penalty on EBM (section 7):
     - Execute: `energybalance/noise_penalty_const.sh`
     - Archived Results: `results/noise_penalty_const`
-- Hyperparameter search on OU process (Appendix A):
+  - FitzHugh-Nagumo model (Appendix A):
+    - Execute: `others/fitzhugh/noise_penalty.sh`
+    - Archived Results: `results/fhn_noise`
+- Hyperparameter search on OU process (Appendix B):
     - Execute: `ornstein/noise_penalty.sh`
     - Archived Results: `results/ornstein_noise_penalty`
-- Hyperparameter search on EBM with linear diffusion (Appendix B):
+- Hyperparameter search on EBM with linear diffusion (Appendix C):
     - Execute: `energybalance/noise_penalty_linear.sh`
     - Archived Results: `results/noise_penalty_linear`
 

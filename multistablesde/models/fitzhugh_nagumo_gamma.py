@@ -61,4 +61,4 @@ class FitzHughNagumoGamma(object):
             xs.sub_(mean).div_(std)
             return xs, mean, std
         else:
-            return xs
+            return xs, None, None

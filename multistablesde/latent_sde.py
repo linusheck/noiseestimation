@@ -422,6 +422,7 @@ def main(
     configuration = locals()
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    print(device)
 
     models = {
         "energy": StochasticEnergyBalance(),

@@ -177,7 +177,13 @@ def draw_posterior_around_data(ts, xs_posterior, xs_datapoint, file, title):
     plt.close()
 
 
-def kramers_moyal(ts, xs):
+def kramers_moyal(ts, xs, dims=1):
+    return kramers_moyal_one_dim(ts, xs)
+    # if dims == 1:
+    # elif dims == 2:
+    #     return kramers_moyal_two_dims(ts, xs)
+
+def kramers_moyal_one_dim(ts, xs):
     dt = ts[1] - ts[0]
     kmc_for_each_batch = []
     bin_space = (np.linspace(-3.0, 3.0, 500),)
@@ -189,29 +195,104 @@ def kramers_moyal(ts, xs):
     avg_kmc = sum(kmc_for_each_batch) / len(kmc_for_each_batch)
     return avg_kmc, bin_space[0]
 
-def draw_kramers_moyal(ts, xs_sde, xs_data, file, title):
+def kramers_moyal_two_dims(ts, xs):
+    dt = ts[1] - ts[0]
+    kmc_for_each_batch = []
+    bin_space = (np.linspace(-3.0, 3.0, 500),) * 2
+    for batch_i in range(xs.size(dim=1)):
+        current_timeseries = xs[:, batch_i, :]
+        kmc, edges = km(np.nan_to_num(current_timeseries.numpy()), powers=np.array([[1, 0], [0, 1], [2, 0], [0, 2]]), bins=bin_space)
+        kmc = kmc / dt
+        kmc_for_each_batch.append(kmc)
+    avg_kmc = sum(kmc_for_each_batch) / len(kmc_for_each_batch)
+    return avg_kmc, bin_space
+
+    raise NotImplementedError("Two-dimensional KM not implemented yet")
+
+def draw_kramers_moyal(ts, xs_sde, xs_data, file, title, dims=1):
     km_data, bin_space1 = (
-        kramers_moyal(ts, xs_data)
+        kramers_moyal(ts, xs_data, dims=dims)
     )
     km_sde, bin_space2 = (
-        kramers_moyal(ts, xs_sde)
+        kramers_moyal(ts, xs_sde, dims=dims)
     )
-    assert all(bin_space1 == bin_space2)
 
-    num_subplots = km_data.size(dim=0)
-    fig, axs = plt.subplots(num_subplots)
-    fig.set_size_inches(3, 6)
-    for i in range(1, num_subplots):
-        axs[i - 1].plot(bin_space1[:-1], km_sde.numpy()[i, :], color="darkblue", label="Latent SDE")
-        axs[i - 1].plot(bin_space2[:-1], km_data.numpy()[i, :], color="orange", label="Data")
-        axs[i - 1].set_xlabel("y")
-        axs[i - 1].set_ylabel(f"KM{i}")
-    plt.legend()
-    
-    plt.title(f"KM factors, {title}")
-    plt.tight_layout(pad=0.3)
-    plt.savefig(file + extension)
-    plt.close()
+    if dims == 1:
+        assert all(bin_space1 == bin_space2)
+
+        num_subplots = km_data.size(dim=0)
+        fig, axs = plt.subplots(num_subplots)
+        fig.set_size_inches(3, 6)
+        for i in range(1, num_subplots):
+            axs[i - 1].plot(bin_space1[:-1], km_sde.numpy()[i, :], color="darkblue", label="Latent SDE")
+            axs[i - 1].plot(bin_space2[:-1], km_data.numpy()[i, :], color="orange", label="Data")
+            axs[i - 1].set_xlabel("y")
+            axs[i - 1].set_ylabel(f"KM{i}")
+        plt.legend()
+        
+        plt.title(f"KM factors, {title}")
+        plt.tight_layout(pad=0.3)
+        plt.savefig(file + extension)
+        plt.close()
+    # elif dims == 2:
+    #     print(km_data.size())
+    #     # torch.Size([5, 499, 499])
+    #     print(km_sde.size())
+    #     # torch.Size([5, 499, 499])
+    #     # print(bin_space1)
+    #     # bin_space1 == (np.linspace(-3.0, 3.0, 500),) * 2
+    #     # print(bin_space2)
+    #     # bin_space2 == (np.linspace(-3.0, 3.0, 500),) * 2
+    #     num_subplots = km_data.size(dim=0)
+    #     fig, axs = plt.subplots(num_subplots-1, 2, figsize=(12, 3 * num_subplots-1))
+
+    #     km_titles = [
+    #         "Drift $dx$",
+    #         "Drift $dy$",
+    #         "Diffusion $dx$",
+    #         "Diffusion $dy$"
+    #     ]
+    #     for i in range(1, num_subplots):
+    #         im1 = axs[i - 1, 0].imshow(km_sde.numpy()[i, :, :], aspect='auto', origin='lower', extent=[bin_space1[0][0], bin_space1[0][-1], bin_space1[0][0], bin_space1[0][-1]], cmap='viridis')
+    #         axs[i - 1, 0].set_title(f"{km_titles[i-1]} Latent SDE")
+    #         axs[i - 1, 0].set_xlabel("y1")
+    #         axs[i - 1, 0].set_ylabel("y2")
+    #         fig.colorbar(im1, ax=axs[i - 1, 0])
+    #         im2 = axs[i - 1, 1].imshow(km_data.numpy()[i, :, :], aspect='auto', origin='lower', extent=[bin_space2[0][0], bin_space2[0][-1], bin_space2[0][0], bin_space2[0][-1]], cmap='viridis')
+    #         axs[i - 1, 1].set_title(f"{km_titles[i-1]} Data")
+    #         axs[i - 1, 1].set_xlabel("y1")
+    #         axs[i - 1, 1].set_ylabel("y2")
+    #         fig.colorbar(im2, ax=axs[i - 1, 1])
+
+    #     plt.tight_layout(pad=0.3)
+    #     plt.savefig(file + extension)
+    #     plt.close()
+
+
+# num_subplots = km_data.size(dim=0)
+# fig, axs = plt.subplots(num_subplots-1, 2, figsize=(12, 3 * num_subplots-1))
+
+# km_titles = [
+#     "Drift $dx$",
+#     "Drift $dy$",
+#     "Diffusion $dx$",
+#     "Diffusion $dy$"
+# ]
+# for i in range(1, num_subplots):
+#     im1 = axs[i - 1, 0].imshow(km_sde.numpy()[i, :, :], aspect='auto', origin='lower', extent=[bin_space1[0][0], bin_space1[0][-1], bin_space1[0][0], bin_space1[0][-1]], cmap='viridis')
+#     axs[i - 1, 0].set_title(f"{km_titles[i-1]} Latent SDE")
+#     axs[i - 1, 0].set_xlabel("y1")
+#     axs[i - 1, 0].set_ylabel("y2")
+#     fig.colorbar(im1, ax=axs[i - 1, 0])
+#     im2 = axs[i - 1, 1].imshow(km_data.numpy()[i, :, :], aspect='auto', origin='lower', extent=[bin_space2[0][0], bin_space2[0][-1], bin_space2[0][0], bin_space2[0][-1]], cmap='viridis')
+#     axs[i - 1, 1].set_title(f"{km_titles[i-1]} Data")
+#     axs[i - 1, 1].set_xlabel("y1")
+#     axs[i - 1, 1].set_ylabel("y2")
+#     fig.colorbar(im2, ax=axs[i - 1, 1])
+
+# plt.tight_layout(pad=0.3)
+# plt.savefig(file + extension)
+# plt.close()
 
 
 def tipping_rate(ts, xs):
@@ -319,6 +400,11 @@ def run_individual_analysis(model, data, training_info_file, config_file, show_p
     xs_sde_extrapolated = latent_sde.sample(batch_size, ts_extrapolated, dt=dt)
     xs_data_extrapolated = tsxs_data["xs"]
 
+    print("??1")
+    xs_sde_extrapolated_full = latent_sde.sample(batch_size, ts_extrapolated, dt=dt, project=False)
+    fhn_gamma_extrapolated_full = FitzHughNagumoGamma().sample(batch_size, ts_extrapolated, False, "cpu", project=False)[0]
+
+    print("??")
     datapoint_extrapolated = xs_data_extrapolated[:, 1:2, :]
     datapoint_extrapolated_repeated = datapoint_extrapolated.repeat(1, batch_size, 1)
     posterior_extrapolated, _, _ = latent_sde.posterior_plot(
@@ -385,7 +471,12 @@ def run_individual_analysis(model, data, training_info_file, config_file, show_p
             ts, posterior, datapoint, f"{out}/posterior_{name}", title
         )
 
+        sde_dims = xs_sde_extrapolated_full.size(dim=2)
+
+        # if sde_dims == 1:
         draw_kramers_moyal(ts, xs_sde, xs_data, f"{out}/km_{name}", title)
+        # else:
+        #     draw_kramers_moyal(ts, xs_sde_extrapolated_full[interval[0] : interval[1], :, :], fhn_gamma_extrapolated_full[interval[0] : interval[1], :, :], f"{out}/km_{name}", title, dims=1)
         draw_tipping(ts, xs_sde, xs_data, 5, f"{out}/tipping_{name}", title)
 
         if name == "2_train":
@@ -400,8 +491,12 @@ def run_individual_analysis(model, data, training_info_file, config_file, show_p
         info_local["bifurcation_data"] = bifurcation(xs_data)
         info_local["bifurcation_sde"] = bifurcation(xs_sde)
 
+        # if sde_dims == 1:
         km_sde, binspace_sde = kramers_moyal(ts, xs_sde)
         km_data, binspace_data = kramers_moyal(ts, xs_data)
+        # else:
+        #     km_sde, binspace_sde = kramers_moyal(ts, xs_sde_extrapolated_full[interval[0] : interval[1], :, :], dims=xs_sde_extrapolated_full.size(dim=2))
+        #     km_data, binspace_data = kramers_moyal(ts, fhn_gamma_extrapolated_full[interval[0] : interval[1], :, :], dims=fhn_gamma_extrapolated_full.size(dim=2))
         assert all(binspace_data == binspace_sde)
         info_local["km_binspace"] = list(binspace_sde)
         info_local["km_sde_drift"] = list(km_sde.numpy()[1, :])
@@ -736,7 +831,7 @@ def draw_phase_portrait(sde, t1, out, diffusion=False):
     num_steps = 10000
     ts = torch.linspace(0, t1, steps=num_steps)
     if isinstance(sde, FitzHughNagumo) or isinstance(sde, FitzHughNagumoGamma) or isinstance(sde, FitzHughNagumoKeno):
-        trajectories = sde.sample(batch_size, ts, False, "cpu", project=False).numpy()
+        trajectories = sde.sample(batch_size, ts, False, "cpu", project=False)[0].numpy()
         if diffusion:
             sde_func = sde.g
         else:

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 fixed_args="multistablesde/latent_sde.py --latent-size=1 --lr_gamma=0.9995 --model=energyconstant --kl-anneal-iters=1000 --num-iters 10000"
 
 variable_args=(

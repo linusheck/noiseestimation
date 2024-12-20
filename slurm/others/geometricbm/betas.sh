@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 fixed_args="multistablesde/latent_sde.py --model geometricbm --dt=0.02 --t1=1.0 --decay=0.999 --kl-anneal-iters=1000 --latent-size=4"
 
 variable_args=(
