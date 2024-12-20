@@ -1,7 +1,5 @@
 # The multistablesde package
 
-[![DOI](https://zenodo.org/badge/790110749.svg)](https://zenodo.org/doi/10.5281/zenodo.11032104)
-
 This package contains all code and experiments from the paper "Improving the Noise Estimation of Latent Neural Stochastic Differential Equations".
 
 # Experiments in the paper
@@ -43,11 +41,11 @@ The experiments are included as `slurm` array jobs. Each parametrization of a pa
 Example:
 
     cd slurm
-    sbatch --array=0-7 run.sh energybalance/betas.sh
+    sbatch --array=0-7 run.sh energybalance/betas_const.sh
 
 ## Without Slurm
 
-You can run single experiments without using slurm, but you need to specify which experiment you want to run using an environment variable. For instance, looking into `energybalance/betas.sh`:
+You can run single experiments without using slurm, but you need to specify which experiment you want to run using an environment variable. For instance, looking into `energybalance/betas_const.sh`:
 
     variable_args=(
         "--beta=0.01"
@@ -58,7 +56,7 @@ You can run single experiments without using slurm, but you need to specify whic
 
 Say we want to run the experiment with $\beta=10$, which is the 3rd (zero-indexed) parametrization, run:
 
-    SLURM_ARRAY_TASK_ID=3 ./run_no_slurm.sh energybalance/noise_penalty.sh
+    SLURM_ARRAY_TASK_ID=3 ./run_no_slurm.sh energybalance/betas_const.sh
 
 # Analyse Results
 
