@@ -1,5 +1,7 @@
 # The multistablesde package
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.14534738.svg)](https://doi.org/10.5281/zenodo.14534738)
+
 This package contains all code and experiments from the paper "Improving the Noise Estimation of Latent Neural Stochastic Differential Equations".
 
 # Experiments in the paper
