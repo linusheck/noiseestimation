@@ -17,7 +17,7 @@ For all experiments, the scripts to execute them (see below how), as well as the
 - Noise penalty on EBM (section 7):
     - Execute: `energybalance/noise_penalty_const.sh`
     - Archived Results: `results/noise_penalty_const`
-  - FitzHugh-Nagumo model (Appendix A):
+- FitzHugh-Nagumo model (Appendix A):
     - Execute: `others/fitzhugh/noise_penalty.sh`
     - Archived Results: `results/fhn_noise`
 - Hyperparameter search on OU process (Appendix B):
