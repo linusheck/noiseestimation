@@ -38,6 +38,7 @@ from models.fitzhugh_nagumo_gamma import FitzHughNagumoGamma
 from models.fitzhugh_nagumo_keno import FitzHughNagumoKeno
 from models.geometric_bm import GeometricBM
 from models.ornstein_uhlenbeck import OrnsteinUhlenbeck
+from models.triple_well import TripleWell
 
 
 class LinearScheduler(object):
@@ -432,9 +433,10 @@ def main(
         "fitzhughkeno": FitzHughNagumoKeno(),
         "geometricbm": GeometricBM(),
         "ornstein": OrnsteinUhlenbeck(),
+        "triplewell": TripleWell(),
     }
     model_obj = models[model]
-    if (isinstance(model_obj, StochasticEnergyBalance) or isinstance(model_obj, ConstantStochasticEnergyBalance)) and data_noise_level is not None:
+    if (isinstance(model_obj, StochasticEnergyBalance) or isinstance(model_obj, ConstantStochasticEnergyBalance)) or isinstance(model_obj, TripleWell) and data_noise_level is not None:
         model_obj.noise_var = data_noise_level
 
     sys.setrecursionlimit(1500)

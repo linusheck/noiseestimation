@@ -186,7 +186,7 @@ def kramers_moyal(ts, xs, dims=1):
 def kramers_moyal_one_dim(ts, xs):
     dt = ts[1] - ts[0]
     kmc_for_each_batch = []
-    bin_space = (np.linspace(-3.0, 3.0, 500),)
+    bin_space = (np.linspace(-4.0, 4.0, 500),)
     for batch_i in range(xs.size(dim=1)):
         current_timeseries = xs[:, batch_i, :]
         kmc, edges = km(np.nan_to_num(current_timeseries.numpy()), powers=2, bins=bin_space)
@@ -198,7 +198,7 @@ def kramers_moyal_one_dim(ts, xs):
 def kramers_moyal_two_dims(ts, xs):
     dt = ts[1] - ts[0]
     kmc_for_each_batch = []
-    bin_space = (np.linspace(-3.0, 3.0, 500),) * 2
+    bin_space = (np.linspace(-4.0, 4.0, 500),) * 2
     for batch_i in range(xs.size(dim=1)):
         current_timeseries = xs[:, batch_i, :]
         kmc, edges = km(np.nan_to_num(current_timeseries.numpy()), powers=np.array([[1, 0], [0, 1], [2, 0], [0, 2]]), bins=bin_space)
@@ -972,4 +972,5 @@ def main(
 if __name__ == "__main__":
     sys.setrecursionlimit(10000)
     print(" ".join(sys.argv))
+    torch.set_num_threads(2)
     fire.Fire(main)

@@ -23,6 +23,9 @@ class ConstantStochasticEnergyBalance(object):
     def energy_out(self, u):
         return self.radiation * u**4
 
+    def drift(self, t):
+        return self.energy_in(t) - self.energy_out(t)
+
     def f(self, t, y):
         x = torch.split(y, split_size_or_sections=(1), dim=1)
         f = self.energy_in(x[0]) - self.energy_out(x[0])
