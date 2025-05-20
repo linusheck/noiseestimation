@@ -17,15 +17,24 @@ For all experiments, the scripts to execute them (see below how), as well as the
 - Noise penalty on EBM (section 7):
     - Execute: `energybalance/noise_penalty_const.sh`
     - Archived Results: `results/noise_penalty_const`
-- FitzHugh-Nagumo model (Appendix A):
+- FitzHugh-Nagumo model (Appendix B1):
     - Execute: `others/fitzhugh/noise_penalty.sh`
     - Archived Results: `results/fhn_noise`
-- Hyperparameter search on OU process (Appendix B):
+- OU process (Appendix B2):
     - Execute: `ornstein/noise_penalty.sh`
     - Archived Results: `results/ornstein_noise_penalty`
-- Hyperparameter search on EBM with linear diffusion (Appendix C):
+- EBM with rarer tipping (Appendix B3):
+    - Execute: `energybalance/noise_penalty_const_lower.sh`
+    - Archived Results: `results/noise_level_low`
+- Triple-Well model (Appendix B4):
+    - Execute: `others/noise_penalty_triple.sh`
+    - Archived Results: `results/triple_well`
+- EBM with linear diffusion (Appendix B5):
     - Execute: `energybalance/noise_penalty_linear.sh`
     - Archived Results: `results/noise_penalty_linear`
+- Extreme values of beta (Appendix B6):
+    - Execute: `energybalance/noise_penalty_extreme_betas.sh`
+    - Archived Results: `results/beta_argument`
 
 # Running the experiments
 
